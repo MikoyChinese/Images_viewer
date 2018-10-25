@@ -23,6 +23,7 @@ class MyListWidget(QListWidget):
         self.setResizeMode(QListWidget.Adjust)
         self.setSelectionMode(QListWidget.ExtendedSelection)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.setSelectionRectVisible(True)
         self.ok = False
         self.ctrlPressed = False
         self.zoomSizes = [60, 80, 100, 120, 240, 360]

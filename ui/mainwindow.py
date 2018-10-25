@@ -12,7 +12,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIcon
 from ui.dirViewer import FileViewer
 from ui.myListWidget import MyListWidget
-
+from ui.myListView import MyListView
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -47,21 +47,36 @@ class Ui_MainWindow(object):
         self.treeView.setObjectName("treeView")
 
         self.gridLayout.addWidget(self.treeView, 1, 0, 1, 1)
+
+        '''
         self.buttonBox = QtWidgets.QDialogButtonBox(self.centralWidget)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setCenterButtons(True)
         self.buttonBox.setObjectName("buttonBox")
         self.gridLayout.addWidget(self.buttonBox, 2, 2, 1, 1)
+        '''
+
+        self.listView_HLayout = QtWidgets.QHBoxLayout()
+        self.listView_HLayout.setContentsMargins(11, 11, 11, 11)
+        self.listView_HLayout.setSpacing(6)
+        self.listView_HLayout.setObjectName("listView_HLayout")
+        self.lstView_addButton = QtWidgets.QPushButton(self.centralWidget)
+        self.lstView_addButton.setObjectName("lstView_addButton")
+        self.lstView_selectedButton = QtWidgets.QPushButton(self.centralWidget)
+        self.lstView_selectedButton.setObjectName("lstView_selectedButton")
+        self.listView_HLayout.addWidget(self.lstView_selectedButton)
+        self.listView_HLayout.addWidget(self.lstView_addButton)
+        self.gridLayout.addLayout(self.listView_HLayout, 2, 2, 1, 1)
+
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setContentsMargins(11, 11, 11, 11)
         self.horizontalLayout.setSpacing(6)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.pushButton_2 = QtWidgets.QPushButton(self.centralWidget)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout.addWidget(self.pushButton_2)
-        self.pushButton = QtWidgets.QPushButton(self.centralWidget)
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout.addWidget(self.pushButton)
+
+        self.label_0 = QtWidgets.QLabel(self.centralWidget)
+        self.label_0.setObjectName("label_0")
+
+        self.horizontalLayout.addWidget(self.label_0)
         self.gridLayout.addLayout(self.horizontalLayout, 2, 0, 1, 1)
 
         self.listWidget = MyListWidget(parent=self.centralWidget)
@@ -72,8 +87,9 @@ class Ui_MainWindow(object):
         self.verticalLayout.setContentsMargins(11, 11, 11, 11)
         self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.listView = QtWidgets.QListView(self.centralWidget)
+        self.listView = MyListView(self.centralWidget)
         self.listView.setObjectName("listView")
+
         self.verticalLayout.addWidget(self.listView)
         self.gridLayout.addLayout(self.verticalLayout, 1, 2, 1, 1)
         self.gridLayout.setColumnStretch(0, 1)
@@ -93,8 +109,17 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton_2.setText(_translate("MainWindow", "PushButton"))
-        self.pushButton.setText(_translate("MainWindow", "PushButton"))
+        self.lstView_addButton.setText(u'添加目录')
+        self.lstView_selectedButton.setText(u"选择此目录")
+        self.label_0.setText("Nothing.")
+
+        self.move_to_lst = []
+        self.listView.setList(self.move_to_lst)
+
+        # Button <Signal>:
+        self.lstView_addButton.clicked.connect(self.listView.open_FileDialog)
+        self.lstView_selectedButton.clicked.connect(self.listView.getSelectedText)
+        self.listView.signal_selectedText.connect(self.listView.moveToUp)
 
     def createPicListWidget(self, msg):
         self.current_root = msg
@@ -122,6 +147,7 @@ class Ui_MainWindow(object):
             self.listWidget.addItem(pic_item)
 
     def moveItem(self):
+
         pass
 
     def removeItem(self):
