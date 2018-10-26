@@ -15,7 +15,7 @@ from PyQt5.QtCore import QStringListModel, pyqtSignal
 
 class MyListView(QListView):
 
-    signal_selectedText = pyqtSignal(str)
+    signal_selectedPath = pyqtSignal(str)
     def __init__(self, parent=None):
         super(MyListView, self).__init__(parent)
         self.setWordWrap(True)
@@ -25,29 +25,30 @@ class MyListView(QListView):
         self.lst = lst
 
     def open_FileDialog(self):
-        text = QFileDialog.getExistingDirectory(self, u"请选择需要添加的路径：", '/')
-        self.addListText(text)
+        path = QFileDialog.getExistingDirectory(self, u"请选择需要添加的路径：", '/')
+        if path != '':
+            self.addListPath(path)
 
-    def addListText(self, text):
-        if text != '':
-            self.lst.append(text)
+    def addListPath(self, path):
+        if path != '':
+            self.lst.append(path)
             lst = self.lst.copy()
             lst.reverse()
             slm = QStringListModel()
             slm.setStringList(lst)
             self.setModel(slm)
 
-    def getSelectedText(self):
+    def getSelectedPath(self):
         if self.selectedIndexes():
             index = self.currentIndex()
             model = index.model()
             text = model.data(index, 0)
-            self.signal_selectedText.emit(text)
+            self.signal_selectedPath.emit(text)
 
-    def moveToUp(self, selectedText):
-        if self.lst[-1] != selectedText and selectedText != '':
-                self.lst.remove(selectedText)
-                self.addListText(selectedText)
+    def moveToUp(self, selectedPath):
+        if self.lst[-1] != selectedPath and selectedPath != '':
+                self.lst.remove(selectedPath)
+                self.addListPath(selectedPath)
 
 
 

@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-import sys
+import sys, os, shutil
 from PyQt5.QtCore import Qt, QSize, QMetaObject, QCoreApplication, QDir, QPoint, QFile
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIcon
@@ -97,9 +97,6 @@ class Ui_MainWindow(object):
         self.gridLayout.setColumnStretch(2, 1)
         self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 2)
         MainWindow.setCentralWidget(self.centralWidget)
-        self.mainToolBar = QtWidgets.QToolBar(MainWindow)
-        self.mainToolBar.setObjectName("mainToolBar")
-        MainWindow.addToolBar(Qt.TopToolBarArea, self.mainToolBar)
 
         self.retranslateUi(MainWindow)
         QMetaObject.connectSlotsByName(MainWindow)
@@ -108,7 +105,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("Images_viewer", "Images_viewer"))
         self.lstView_addButton.setText(u'添加目录')
         self.lstView_selectedButton.setText(u"选择此目录")
         self.label_0.setText("Nothing.")
@@ -118,8 +115,8 @@ class Ui_MainWindow(object):
 
         # Button <Signal>:
         self.lstView_addButton.clicked.connect(self.listView.open_FileDialog)
-        self.lstView_selectedButton.clicked.connect(self.listView.getSelectedText)
-        self.listView.signal_selectedText.connect(self.listView.moveToUp)
+        self.lstView_selectedButton.clicked.connect(self.listView.getSelectedPath)
+        self.listView.signal_selectedPath.connect(self.listView.moveToUp)
 
     def createPicListWidget(self, msg):
         self.current_root = msg
@@ -147,8 +144,22 @@ class Ui_MainWindow(object):
             self.listWidget.addItem(pic_item)
 
     def moveItem(self):
-
-        pass
+        lst = self.listView.lst
+        if lst:
+            path = lst[-1]
+            if not os.path.exists(path):
+                QtWidgets.QMessageBox.warning(self.listWidget, 'Warning:', '目录: [%s] 不存在, 请核查!' % path,
+                                              QtWidgets.QMessageBox.Yes)
+                return
+            items = self.listWidget.selectedItems()
+            if (len(items)  == 0):
+                return
+            else:
+                for item in items:
+                    file_name = self.current_root + '/' + item.text()
+                    dst_file_name = path + '/' + item.text()
+                    shutil.move(file_name, dst_file_name)
+                self.createPicListWidget(self.current_root)
 
     def removeItem(self):
         items = self.listWidget.selectedItems()
@@ -162,13 +173,12 @@ class Ui_MainWindow(object):
                     file_name = self.current_root + '/' + item.text()
                     file = QFile(file_name)
                     file.remove()
-                    print('Remove File: %s' %file_name)
                 self.createPicListWidget(self.current_root)
             else:
                 pass
 
 
-if __name__ == '__main__':
+def main():
     app = QtWidgets.QApplication(sys.argv)
     mainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
