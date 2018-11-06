@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['/home/commaai-03/pycharm-community-2018.2.4/PycharmProjects/Image_viewer'],
+             pathex=['/home/commaai-03/Mikoy/github/Images_viewer'],
              binaries=[],
              datas=[],
              hiddenimports=[],

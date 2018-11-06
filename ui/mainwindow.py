@@ -110,13 +110,17 @@ class Ui_MainWindow(object):
         self.lstView_selectedButton.setText(u"选择此目录")
         self.label_0.setText("Nothing.")
 
+        # move_to_lst which will save all the path pics will be saved in.
         self.move_to_lst = []
+        # Initial the listView's list.
         self.listView.setList(self.move_to_lst)
 
         # Button <Signal>:
         self.lstView_addButton.clicked.connect(self.listView.open_FileDialog)
         self.lstView_selectedButton.clicked.connect(self.listView.getSelectedPath)
         self.listView.signal_selectedPath.connect(self.listView.moveToUp)
+        # Add a fiction that move the selected item up to top which was doubleclicked.
+        self.listView.doubleClicked.connect(self.listView.getSelectedPath)
 
     def createPicListWidget(self, msg):
         self.current_root = msg
@@ -176,6 +180,7 @@ class Ui_MainWindow(object):
                 self.createPicListWidget(self.current_root)
             else:
                 pass
+
 
 
 def main():

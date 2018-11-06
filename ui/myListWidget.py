@@ -42,6 +42,7 @@ class MyListWidget(QListWidget):
             if (self.itemAt(self.mapFromGlobal(QCursor.pos())) != None):
                 rightMenu.exec_(QCursor.pos())
 
+    # Set the meau actions which are from the parent actions.
     def setAction(self, action_1, action_2):
         self.action_1 = action_1
         self.action_2 = action_2
@@ -71,13 +72,18 @@ class MyListWidget(QListWidget):
             return super().wheelEvent(event)
 
     def keyReleaseEvent(self, QKeyEvent):
+        # Change the status of ctrlPressed flag to False when Key_Control has released.
         if QKeyEvent.key() == Qt.Key_Control:
             self.ctrlPressed = False
         return super().keyReleaseEvent(QKeyEvent)
 
     def keyPressEvent(self, QKeyEvent):
+        # Obtain the flag while the Key_Control has been pressing.
         if QKeyEvent.key() == Qt.Key_Control:
             self.ctrlPressed = True
+        # Set the ShortCut [Ctrl + X] to the action<Move items to selected path>.
+        if QKeyEvent.key() == (Qt.Key_Control and Qt.Key_X):
+            self.action_1()
         return super().keyPressEvent(QKeyEvent)
 
     def zoomAdjust(self, zoomNum=2):
