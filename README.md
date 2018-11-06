@@ -7,7 +7,7 @@ A PyQt software to list view images on the special folder.
 executable and then you can execute it directly.
 
 * Also you can see the source python files, the main entrance of Application is main.py file which connects the '
-./ui/mainwindow.py'. You can run it on your PC Terminal such like this 'python3 main.py'.
+./ui/mainwindow.py'. You can run it on your PC Terminal such like this 'python3 Images_viewer.py'.
 
 ### 2. Required
 
